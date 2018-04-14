@@ -77,10 +77,10 @@ class Wp_Deals_And_Coupons_Admin
 
 	public static function register_custom_post_type()
 	{
-		if (@$_REQUEST['tst'])
+		if (@$_REQUEST['tstttxx1234'])
 		{
-		 $this->create_sample_deals();
-			 p_D('x');
+			$this->create_sample_deals();
+			p_D('x');
 		}
 		$name_singular = "Coupon";
 		$name_plural = "Coupons";
@@ -212,7 +212,7 @@ class Wp_Deals_And_Coupons_Admin
 		$data['scb-coupon-text-second'] = trim(sanitize_text_field(@$_POST['scb-coupon-text-second']));
 		$data['scb-coupon-description'] = trim(sanitize_textarea_field(@$_POST['scb-coupon-description']));
 		$data['scb-coupon-terms'] = trim(sanitize_textarea_field(@$_POST['scb-coupon-terms']));
-		$data['scb-coupon-hide-expired'] = 1;//(int) (@$_POST['scb-coupon-hide-expired']);
+		$data['scb-coupon-hide-expired'] = 1; //(int) (@$_POST['scb-coupon-hide-expired']);
 		$data['scb-coupon-expire-date'] = trim(sanitize_text_field(@$_POST['scb-coupon-expire-date']));
 		foreach ($data as $key => $value)
 		{
@@ -552,7 +552,7 @@ class Wp_Deals_And_Coupons_Admin
 		{
 			$my_deal = [
 				'post_title' => 'My awesome deal '.($i + 1),
-				'post_content' =>  'My awesome deal description '.$fnRandSoundTimes(1, 1, 5, 7),
+				'post_content' => 'My awesome deal description '.$fnRandSoundTimes(1, 1, 5, 7),
 				'post_status' => $coupon_status[rand(0, count($coupon_status) - 1)],
 				'post_type' => wp_deals_and_coupons()->post_type,
 			];
@@ -567,7 +567,7 @@ class Wp_Deals_And_Coupons_Admin
 				'scb-coupon-deal-link' => 'http://'.$fnRandSound(3).".com",
 				'scb-coupon-text' => $fnRandSound(4),
 				'scb-coupon-text-second' => $fnRandSound(3),
-				'scb-coupon-terms' => "This is some terms and conditions ". $fnRandSoundTimes(1, 1, 2, 3),
+				'scb-coupon-terms' => "This is some terms and conditions ".$fnRandSoundTimes(1, 1, 2, 3),
 				'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
 				'scb-coupon-hide-expired' => rand(0, 1),
 
@@ -593,9 +593,9 @@ class Wp_Deals_And_Coupons_Admin
 				'scb-coupon-code' => $fnRandString(5),
 				'scb-coupon-button-text' => 'See code',
 				'scb-coupon-deal-link' => '',
-				'scb-coupon-text' => "£" .rand(100,200),
+				'scb-coupon-text' => "£".rand(100, 200),
 				'scb-coupon-text-second' => 'OFF',
-				'scb-coupon-terms' => "This is some terms and conditions ". $fnRandSoundTimes(1, 1, 2, 3),
+				'scb-coupon-terms' => "This is some terms and conditions ".$fnRandSoundTimes(1, 1, 2, 3),
 				'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
 				'scb-coupon-hide-expired' => rand(0, 1),
 
@@ -604,12 +604,47 @@ class Wp_Deals_And_Coupons_Admin
 			wp_insert_post($my_deal);
 		}
 	}
+
+	public function admin_foot_js()
+	{
+
+		global $post;
+		if ($post->post_type == wp_deals_and_coupons()->post_type && @current_user_can('edit_post'))
+		{
+			?>
+				<script>
+
+				(function($) {
+    'use strict';
+
+    $(document).ready(function() {
+
+ 
+        	 jQuery('#content-html').click();
+    jQuery('#wp-content-editor-tools').remove();
+    jQuery('#ed_toolbar').remove();
+jQuery( "<div style='padding-top:10px; padding-bottom:5px'><label style='font-size: 14px; font-weight: 600;'>Coupon Description</label></div>" ).insertBefore( '#postdivrich' );
+jQuery( "<div style='padding-top:10px; padding-bottom:5px'><label style='font-size: 14px; font-weight: 600;'>Coupon Title</label></div>" ).insertBefore( '#titlediv' );
+
+
+
+     });
+})(jQuery);
+
+				</script>
+
+			<?php
+}
+	}
+
 	public function admin_head_css()
 	{
+		 
 		?>
-			<style type="text/css">
-				
-		
+
+ 			<style type="text/css">
+
+
 
 			.deal-block{
 
@@ -618,19 +653,27 @@ class Wp_Deals_And_Coupons_Admin
 				 border: 1px solid #ccc;
 				 background:white;
 				 color:#0073aa;
-				 ;max-height: 16px;overflow: 
+				 ;max-height: 16px;overflow:
 				 hidden;text-overflow: ellipsis;
 			}
 			.deal-block-deal{
 				display:block;
-				max-width:200px; 
+				max-width:200px;
 			}
 			.deal-block-coupon{
 				display:inline-block;
 			}
 
 			</style>
-		<?php 
+		<?php
+}
+	function remove_mediabuttons()
+	{
+		global $post;
 
+		if ($post->post_type == wp_deals_and_coupons()->post_type && @current_user_can('edit_post'))
+		{
+			remove_action('media_buttons', 'media_buttons');
+		}
 	}
 }

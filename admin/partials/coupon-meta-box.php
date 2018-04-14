@@ -41,7 +41,7 @@ wp_nonce_field('scb_dc_data', 'scb_dc_nonce');
                 </label>
             </th>
             <td>
-                <input type="url" name="scb-coupon-deal-link" id="scb-coupon-deal-link" value="<?php echo (@$meta_values['scb-coupon-deal-link'][0]); ?>">
+                <input class="widefat"  type="url" name="scb-coupon-deal-link" id="scb-coupon-deal-link" value="<?php echo (@$meta_values['scb-coupon-deal-link'][0]); ?>">
                 <p class="description" id="scb-coupon-deal-link-description">Link to be opened when clicked on coupon code. You can use your affiliate links.</p>
             </td>
         </tr>

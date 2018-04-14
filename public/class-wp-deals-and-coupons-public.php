@@ -82,23 +82,12 @@ class Wp_Deals_And_Coupons_Public
 	 */
 	public function enqueue_scripts()
 	{
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Wp_Deals_And_Coupons_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Wp_Deals_And_Coupons_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		//wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__).'js/wp-deals-and-coupons-public.js', array('jquery','jquery-ui'), $this->version, false);
+		 
+		 wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__).'js/wp-deals-and-coupons-public.js', array('jquery'), $this->version, false);
 		//wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 
-		wp_enqueue_script( 'jquery-ui-dialog' ); 
-    wp_enqueue_style( 'wp-jquery-ui-dialog' );
+		//wp_enqueue_script( 'jquery-ui-dialog' ); 
+       //wp_enqueue_style( 'wp-jquery-ui-dialog' );
 
  
 	}
