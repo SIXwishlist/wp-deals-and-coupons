@@ -193,6 +193,8 @@ class Wp_Deals_And_Coupons
 		$this->loader->add_action('init', $this->plugin_admin, 'custom_post_status');
 
 		$this->loader->add_action('admin_head', $this->plugin_admin, 'admin_head_css');
+		$this->loader->add_action('admin_head', $this->plugin_admin, 'remove_mediabuttons');
+		$this->loader->add_action('admin_footer', $this->plugin_admin, 'admin_foot_js');
 
 
  	}
