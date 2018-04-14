@@ -1,0 +1,123 @@
+.scb-deal-row {
+    width: 100%;
+    position: relative;
+    border-bottom: 1px solid #ccc;
+    border-left: 3px solid #fafafa;
+    border-right: 3px solid transparent;
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+
+    border-left-color: #979797;
+    border-right-color: #979797;
+    background: #f3f3f3;
+    min-height: 160px;
+}
+
+.scb-col {
+    min-height: 90%;
+}
+
+.scb-left-col {
+    float: left;
+    width: 25%;
+    padding-right: 10px;
+}
+
+.caption-holder {
+    text-align: center;
+    border-right: 1px solid #d6d6d6;
+    height1: 180px;
+    text-transform: uppercase;
+}
+
+.scb-center-col {
+    float: left;
+
+    width: 50%;
+    padding-right: 10px;
+}
+
+.scb-right-col {
+    float: right;
+    ;
+    width: 25%
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.scb-coupon-deal-link,
+.scb-coupon-code {
+    background: #529142;
+    color: white;
+    width: 100%;
+    height: 55px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    border: 0;
+    border-radius: 3px;
+    transition: width 300ms;
+    text-align: center;
+    justify-content: center;
+    margin-top: 50%;
+    cursor:pointer;
+}
+
+.scb-coupon-code {
+
+    color: #333;
+
+    background: #e7ecd8;
+    border: 1px solid #a8d3b8;
+}
+
+.scb-right-col {
+    align-self: center;
+}
+.scb-center-col {
+margin-top: 10px;
+}
+h3.scb-coupon-text {
+    padding-top: 25%;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+
+h4.scb-coupon-text-second {
+    padding-top: 0px;
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+h5.scb-coupon-type {
+    padding-top: 0px;
+    font-weight: normal;
+}
+.scb-coupon-title{text-transform: inherit;}
+
+.clearfix {
+    display: inline-block;
+}
+
+.scb-coupon-description{font-size: 9pt;margin-bottom: .6em;}
+.scb-coupon-terms{font-size: 10px;}
+.scb-coupon-terms-label{cursor: pointer;}
+
+.scb-coupon-description, .dashicons{cursor: pointer;}
+
+ * html .clearfix {
+    height: 1%;
+}
+
+.clearfix {
+    display: block;
+}

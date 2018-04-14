@@ -1,0 +1,44 @@
+[
+    {
+        "name": "scriptburn/simple-debug",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/scriptburn/simple-debug.git",
+            "reference": "7606a494eac37235c9bfce8dc4bd6367726a84da"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/scriptburn/simple-debug/zipball/7606a494eac37235c9bfce8dc4bd6367726a84da",
+            "reference": "7606a494eac37235c9bfce8dc4bd6367726a84da",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2017-07-05T17:58:51+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Rajneesh ojha",
+                "email": "contact@scriptburn.com"
+            }
+        ],
+        "description": "A package to implement few simple debug functions",
+        "keywords": [
+            "cache",
+            "http"
+        ]
+    }
+]

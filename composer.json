@@ -1,0 +1,5 @@
+{
+    "require": {
+        "scriptburn/simple-debug": "^1.0"
+    }
+}

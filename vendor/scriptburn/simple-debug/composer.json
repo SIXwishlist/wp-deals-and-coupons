@@ -1,0 +1,19 @@
+{
+  "name": "scriptburn/simple-debug",
+  "description": "A package to implement few simple debug functions",
+  "keywords": ["http", "cache"],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Rajneesh ojha",
+      "email": "contact@scriptburn.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "autoload": {
+    "files":["src/functions.php"]
+  }
+}
+ 
