@@ -44,3 +44,10 @@
 
     //scb-coupon-type
 })(jQuery);
+
+function clean_admin_editor()
+{
+    jQuery('#content-html').click();
+    jQuery('#wp-content-editor-tools').remove();
+    jQuery('#wed_toolbar').remove();
+}
