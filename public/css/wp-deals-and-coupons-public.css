@@ -83,6 +83,7 @@ h5.scb-coupon-type {
   text-decoration: none !important;
   color: #fff !important;
   font-weight: bold;
+  cursor: pointer;
 }
 .scb-coupon-code {
   background: #eee;
