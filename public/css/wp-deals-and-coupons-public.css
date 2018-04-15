@@ -41,10 +41,15 @@
 }
 .scb-col.scb-left-col {
   border-right: #ddd solid 1px;
+  position: relative;
 }
 .caption-holder {
   text-align: center;
   text-transform: uppercase;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 .caption-holder h3,
 .caption-holder h4,

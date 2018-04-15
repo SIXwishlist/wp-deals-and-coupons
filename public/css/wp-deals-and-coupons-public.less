@@ -21,12 +21,12 @@
 .scb-col { 
 	&{ display:table-cell; padding:10px 20px; vertical-align:middle; width:25%; }
 	&.scb-center-col { width:50%; }
-	&.scb-left-col { border-right:#ddd solid 1px; }
+	&.scb-left-col { border-right:#ddd solid 1px; position:relative; }
 }
 
 
 .caption-holder { 
-	&{ text-align:center; text-transform:uppercase; }
+	&{ text-align:center; text-transform:uppercase; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
 	h3, h4, h5{ margin:0; white-space:nowrap; }
 }
 h3.scb-coupon-text { font-weight:bold; font-size:2.5em; line-height:1.1em; }
