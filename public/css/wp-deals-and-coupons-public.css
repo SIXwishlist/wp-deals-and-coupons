@@ -95,18 +95,18 @@ h5.scb-coupon-type {
 .scb-coupon-description .dashicons {
   display: none;
 }
-.scb-coupon-term-holder {
+.scb-coupon-terms-holder {
   cursor: pointer;
   display: block;
   zoom: 1;
   /* For IE 6/7 (trigger hasLayout) */
 }
-.scb-coupon-term-holder:before,
-.scb-coupon-term-holder:after {
+.scb-coupon-terms-holder:before,
+.scb-coupon-terms-holder:after {
   content: "";
   display: table;
 }
-.scb-coupon-term-holder:after {
+.scb-coupon-terms-holder:after {
   clear: both;
 }
 .scb-coupon-terms-label {
@@ -117,7 +117,10 @@ h5.scb-coupon-type {
   font-size: inherit;
   width: auto;
   height: auto;
-  vertical-align: bottom;
+  vertical-align: middle;
+}
+.dashicons-arrow-up-alt2 {
+  cursor: pointer;
 }
 @media (max-width: 480px) {
   h3.scb-coupon-text {
