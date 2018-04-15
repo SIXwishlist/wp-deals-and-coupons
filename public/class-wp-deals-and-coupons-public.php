@@ -82,42 +82,36 @@ class Wp_Deals_And_Coupons_Public
 	 */
 	public function enqueue_scripts()
 	{
-		 
-		 wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__).'js/wp-deals-and-coupons-public.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__).'js/wp-deals-and-coupons-public.js', array('jquery'), $this->version, false);
 		//wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 
-		//wp_enqueue_script( 'jquery-ui-dialog' ); 
-       //wp_enqueue_style( 'wp-jquery-ui-dialog' );
-
- 
+		//wp_enqueue_script( 'jquery-ui-dialog' );
+		//wp_enqueue_style( 'wp-jquery-ui-dialog' );
 	}
 	function deal_shortcode($atts)
 	{
-
 		$atts = shortcode_atts(array(
 			'type' => '',
-			'limit'=>0,
+			'limit' => 0,
 		), $atts);
- 
+
 		if (isset($atts['type']) && !in_array($atts['type'], array_keys(wp_deals_and_coupons()->coupons_types)))
 		{
 			$atts['type'] = '';
 		}
+
+		
 		$args = array(
 			'post_type' => wp_deals_and_coupons()->post_type,
 			'post_status' => ['publish'],
 			'meta_query' => [],
 		);
-		 
-		if($atts['limit'])
+
+		if ($atts['limit'])
 		{
-			$args['posts_per_page']=$atts['limit'];
-
-
-
+			$args['posts_per_page'] = $atts['limit'];
 		}
-		
-		 
+
 		if ($atts['type'])
 		{
 			if ($atts['type'] == 'deal')
@@ -137,11 +131,10 @@ class Wp_Deals_And_Coupons_Public
 				);
 			}
 		}
-		 
-		$coupon_query = new WP_Query( $args );
- 		 
+ 		$coupon_query = new WP_Query($args);
+
 		require_once __DIR__."/partials/deal_shortcode.php";
 
-		return ;
+		return;
 	}
 }

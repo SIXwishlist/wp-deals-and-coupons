@@ -79,7 +79,7 @@ class Wp_Deals_And_Coupons_Admin
 	{
 		if (@$_REQUEST['tstttxx1234'])
 		{
-			$this->create_sample_deals();
+			$this->create_sample_deals(true);
 			p_D('x');
 		}
 		$name_singular = "Coupon";
@@ -176,11 +176,6 @@ class Wp_Deals_And_Coupons_Admin
 
 	public function save_post($post_id)
 	{
-		$fnRandString = function ($length)
-		{
-			return substr(str_shuffle(str_repeat($x = '-#ABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
-		};
-
 		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
 		{
 			return;
@@ -200,7 +195,7 @@ class Wp_Deals_And_Coupons_Admin
 		$data['scb-coupon-type'] = in_array($data['scb-coupon-type'], array_keys(wp_deals_and_coupons()->coupons_types)) ? $data['scb-coupon-type'] : 'coupon';
 
 		$data['scb-coupon-code'] = trim(sanitize_text_field(@$_POST['scb-coupon-code']));
-		$data['scb-coupon-code'] = $data['scb-coupon-type'] == 'deal' ? '' : ($data['scb-coupon-code'] ?: $fnRandString(5));
+		$data['scb-coupon-code'] = $data['scb-coupon-type'] == 'deal' ? '' : ($data['scb-coupon-code'] ?: $this->rand_string(5));
 
 		$data['scb-coupon-button-text'] = trim(sanitize_text_field(@$_POST['scb-coupon-button-text']));
 		$data['scb-coupon-button-text'] = $data['scb-coupon-button-text'] ?: ($data['scb-coupon-type'] == 'coupon' ? 'Coupon' : 'Deal');
@@ -232,9 +227,9 @@ class Wp_Deals_And_Coupons_Admin
 		{
 			if ($key == 'date')
 			{
-				$new['scb_coupon_type'] = __('Coupon Type', 'scb_dc');
+				$new['scb_coupon_type'] = __('Deal Type', 'scb_dc');
 				$new['scb_expire_date'] = __('Expires On', 'scb_dc');
-				$new['scb_hide_expire'] = __('Hide when expired', 'scb_dc');
+				//$new['scb_hide_expire'] = __('Hide when expired', 'scb_dc');
 				$new['status'] = __('Status', 'scb_dc');
 			}
 			$new[$key] = $value;
@@ -297,7 +292,7 @@ class Wp_Deals_And_Coupons_Admin
 
 			?>
         <select name="scb_filter_by_coupon_type"  id="scb_filter_by_coupon_type">
-        <option value=""><?php _e('Filter By Coupon type', 'scb_dc');?></option>
+        <option value=""><?php _e('Filter By Deal type', 'scb_dc');?></option>
 
                      <?php foreach (wp_deals_and_coupons()->coupons_types as $value => $label)
 			{
@@ -444,172 +439,202 @@ class Wp_Deals_And_Coupons_Admin
 		}, 10, 2);
 	}
 
-	public function create_sample_deals()
+	private function rand_string($length)
 	{
-		$fnRandString = function ($length)
+		return substr(str_shuffle(str_repeat($x = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
+	}
+	private function rand_words($length)
+	{
+		// consonant sounds
+		$cons = array(
+			// single consonants. Beware of Q, it's often awkward in words
+			'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
+			'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'z',
+			// possible combinations excluding those which cannot start a word
+			'pt', 'gl', 'gr', 'ch', 'ph', 'ps', 'sh', 'st', 'th', 'wh',
+		);
+
+		// consonant combinations that cannot start a word
+		$cons_cant_start = array(
+			'ck', 'cm',
+			'dr', 'ds',
+			'ft',
+			'gh', 'gn',
+			'kr', 'ks',
+			'ls', 'lt', 'lr',
+			'mp', 'mt', 'ms',
+			'ng', 'ns',
+			'rd', 'rg', 'rs', 'rt',
+			'ss',
+			'ts', 'tch',
+		);
+
+		// wovels
+		$vows = array(
+			// single vowels
+			'a', 'e', 'i', 'o', 'u', 'y',
+			// vowel combinations your language allows
+			'ee', 'oa', 'oo',
+		);
+
+		// start by vowel or consonant ?
+		$current = (mt_rand(0, 1) == '0' ? 'cons' : 'vows');
+
+		$word = '';
+
+		while (strlen($word) < $length)
 		{
-			return substr(str_shuffle(str_repeat($x = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
-		};
-		$fnRandSound = function ($length = 6)
-		{
-			// consonant sounds
-			$cons = array(
-				// single consonants. Beware of Q, it's often awkward in words
-				'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
-				'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'z',
-				// possible combinations excluding those which cannot start a word
-				'pt', 'gl', 'gr', 'ch', 'ph', 'ps', 'sh', 'st', 'th', 'wh',
-			);
-
-			// consonant combinations that cannot start a word
-			$cons_cant_start = array(
-				'ck', 'cm',
-				'dr', 'ds',
-				'ft',
-				'gh', 'gn',
-				'kr', 'ks',
-				'ls', 'lt', 'lr',
-				'mp', 'mt', 'ms',
-				'ng', 'ns',
-				'rd', 'rg', 'rs', 'rt',
-				'ss',
-				'ts', 'tch',
-			);
-
-			// wovels
-			$vows = array(
-				// single vowels
-				'a', 'e', 'i', 'o', 'u', 'y',
-				// vowel combinations your language allows
-				'ee', 'oa', 'oo',
-			);
-
-			// start by vowel or consonant ?
-			$current = (mt_rand(0, 1) == '0' ? 'cons' : 'vows');
-
-			$word = '';
-
-			while (strlen($word) < $length)
+			// After first letter, use all consonant combos
+			if (strlen($word) == 2)
 			{
-				// After first letter, use all consonant combos
-				if (strlen($word) == 2)
-				{
-					$cons = array_merge($cons, $cons_cant_start);
-				}
-
-				// random sign from either $cons or $vows
-				$rnd = ${
-					$current}[mt_rand(0, count(${
-					$current}) - 1)];
-
-				// check if random sign fits in word length
-				if (strlen($word.$rnd) <= $length)
-				{
-					$word .= $rnd;
-					// alternate sounds
-					$current = ($current == 'cons' ? 'vows' : 'cons');
-				}
+				$cons = array_merge($cons, $cons_cant_start);
 			}
 
-			return $word;
-		};
-		$fnRandSoundTimes = function ($min, $max, $min1, $max1) use ($fnRandSound)
-		{
-			$lines = "";
-			$max = rand($min, $max);
-			$max1 = rand($min1, $max1);
-			for ($i = 1; $i <= $max; $i++)
+			// random sign from either $cons or $vows
+			$rnd = ${
+				$current}[mt_rand(0, count(${
+				$current}) - 1)];
+
+			// check if random sign fits in word length
+			if (strlen($word.$rnd) <= $length)
 			{
-				for ($j = 1; $j <= $max1; $j++)
-				{
-					$lines .= $fnRandSound(rand(3, 6))." ";
-				}
-				$lines = trim($lines).".";
+				$word .= $rnd;
+				// alternate sounds
+				$current = ($current == 'cons' ? 'vows' : 'cons');
 			}
+		}
 
-			return $lines;
-		};
-
-		$postFound = function ($title)
+		return $word;
+	}
+	private function rand_sentences($min, $max, $min1, $max1)
+	{
+		$lines = "";
+		$max = rand($min, $max);
+		$max1 = rand($min1, $max1);
+		for ($i = 1; $i <= $max; $i++)
 		{
-			$the_slug = ($title);
-			$args = [
-				'title' => $the_slug,
-				'post_type' => wp_deals_and_coupons()->post_type,
-				'post_status' => array('publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash', 'expired'),
-				'numberposts' => 1,
-			];
-			//return  get_page_by_path($the_slug,OBJECT,wp_deals_and_coupons()->post_type );
+			for ($j = 1; $j <= $max1; $j++)
+			{
+				$lines .= $this->rand_words(rand(3, 6))." ";
+			}
+			$lines = trim($lines).".";
+		}
 
-			return (get_posts($args));
-		};
+		return $lines;
+	}
+	public function create_sample_deals($delete = false)
+	{
+		global $wpdb;
+		if ($delete)
+		{
+			$sql = "DELETE p, pm
+  FROM $wpdb->posts p
+ INNER
+  JOIN $wpdb->postmeta pm
+    ON pm.post_id = p.ID
+ WHERE (p.post_title like 'My awesome deal %' or p.post_title like 'My awesome coupon %' )";
+ $wpdb->query($sql );
+		}
+		 
+		$deals = 0;
+		$coupons = 0;
+		for ($i = 1; $i < 120; $i++)
+		{
+			 if(rand(0,1))
+			{
+				$deal=$this->create_test_deal($deals);
+				//p_n($deal);
+				$deals++;
+			}
+			 else
+			{
+				$coupon=$this->create_test_coupon($coupons);
+				$coupons++;
+				//p_d($coupon);
+			}
+			//p_d('x');
+		}
+	}
+	private function create_test_deal($i = 0)
+	{
 		$coupon_status = wp_deals_and_coupons()->coupons_status;
 		unset($coupon_status['trash']);
 		unset($coupon_status['trash']);
 		$coupon_status = array_keys($coupon_status);
-
-		for ($i = 1; $i < 60; $i++)
+		$my_deal = [
+			'post_title' => 'My awesome deal '.($i + 1),
+			'post_content' => 'My awesome deal description '.$this->rand_sentences(1, 1, 5, 7),
+			'post_status' => $coupon_status[rand(0, count($coupon_status) - 1)],
+			'post_type' => wp_deals_and_coupons()->post_type,
+		];
+		if ($post = ($this->deal_exists($my_deal['post_title'])))
 		{
-			$my_deal = [
-				'post_title' => 'My awesome deal '.($i + 1),
-				'post_content' => 'My awesome deal description '.$fnRandSoundTimes(1, 1, 5, 7),
-				'post_status' => $coupon_status[rand(0, count($coupon_status) - 1)],
-				'post_type' => wp_deals_and_coupons()->post_type,
-			];
-			if ($post = ($postFound($my_deal['post_title'])))
-			{
-				continue;
-			}
-			$my_deal['meta_input'] = [
-				'scb-coupon-type' => 'deal',
-				'scb-coupon-code' => '',
-				'scb-coupon-button-text' => 'Get Deal',
-				'scb-coupon-deal-link' => 'http://'.$fnRandSound(3).".com",
-				'scb-coupon-text' => $fnRandSound(4),
-				'scb-coupon-text-second' => $fnRandSound(3),
-				'scb-coupon-terms' => "This is some terms and conditions ".$fnRandSoundTimes(1, 1, 2, 3),
-				'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
-				'scb-coupon-hide-expired' => rand(0, 1),
-
-			];
-
-			wp_insert_post($my_deal);
+			return $post;
 		}
+		$my_deal['meta_input'] = [
+			'scb-coupon-type' => 'deal',
+			'scb-coupon-code' => '',
+			'scb-coupon-button-text' => 'Get Deal',
+			'scb-coupon-deal-link' => 'http://'.$this->rand_words(3).".com",
+			'scb-coupon-text' => $this->rand_words(4),
+			'scb-coupon-text-second' => $this->rand_words(3),
+			'scb-coupon-terms' => "This is some terms and conditions ".$this->rand_sentences(1, 1, 2, 3),
+			'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
+			'scb-coupon-hide-expired' => rand(0, 1),
 
-		for ($i = 40; $i < 60; $i++)
-		{
-			$my_deal = [
-				'post_title' => 'My awesome coupon '.($i + 1),
-				'post_content' => 'My awesome coupon description '.$fnRandSoundTimes(1, 1, 5, 7),
-				'post_status' => $coupon_status[rand(0, count($coupon_status) - 1)],
-				'post_type' => wp_deals_and_coupons()->post_type,
-			];
-			if ($post = ($postFound($my_deal['post_title'])))
-			{
-				continue;
-			}
-			$my_deal['meta_input'] = [
-				'scb-coupon-type' => 'coupon',
-				'scb-coupon-code' => $fnRandString(5),
-				'scb-coupon-button-text' => 'See code',
-				'scb-coupon-deal-link' => '',
-				'scb-coupon-text' => "£".rand(100, 200),
-				'scb-coupon-text-second' => 'OFF',
-				'scb-coupon-terms' => "This is some terms and conditions ".$fnRandSoundTimes(1, 1, 2, 3),
-				'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
-				'scb-coupon-hide-expired' => rand(0, 1),
-
-			];
-
-			wp_insert_post($my_deal);
-		}
+		];
+		wp_insert_post($my_deal);
+		return $my_deal;
 	}
+	private function create_test_coupon($i = 1)
+	{
+		$coupon_status = wp_deals_and_coupons()->coupons_status;
+		unset($coupon_status['trash']);
+		unset($coupon_status['trash']);
+		$coupon_status = array_keys($coupon_status);
+		$my_deal = [
+			'post_title' => 'My awesome coupon '.($i + 1),
+			'post_content' => 'My awesome coupon description '.$this->rand_sentences(1, 1, 5, 7),
+			'post_status' => $coupon_status[rand(0, count($coupon_status) - 1)],
+			'post_type' => wp_deals_and_coupons()->post_type,
+		];
+		if ($post = ($this->deal_exists($my_deal['post_title'])))
+		{
+			return $post;
+		}
+		$my_deal['meta_input'] = [
+			'scb-coupon-type' => 'coupon',
+			'scb-coupon-code' => $this->rand_string(5),
+			'scb-coupon-button-text' => 'See code',
+			'scb-coupon-deal-link' => '',
+			'scb-coupon-text' => "£".rand(100, 200),
+			'scb-coupon-text-second' => 'OFF',
+			'scb-coupon-terms' => "This is some terms and conditions ".$this->rand_sentences(1, 1, 2, 3),
+			'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
+			'scb-coupon-hide-expired' => rand(0, 1),
 
+		];
+
+		wp_insert_post($my_deal);
+		return $my_deal;
+	}
+	private function deal_exists($title)
+	{
+		$the_slug = ($title);
+		$args = [
+			'title' => $the_slug,
+			'post_type' => wp_deals_and_coupons()->post_type,
+			'post_status' => array('publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash', 'expired'),
+			'numberposts' => 1,
+		];
+		//return  get_page_by_path($the_slug,OBJECT,wp_deals_and_coupons()->post_type );
+
+		return (get_posts($args));
+	}
 	public function admin_foot_js()
 	{
-
 		global $post;
-		if ($post->post_type == wp_deals_and_coupons()->post_type && @current_user_can('edit_post'))
+		if ($post && $post->post_type == wp_deals_and_coupons()->post_type && @current_user_can('edit_post'))
 		{
 			?>
 				<script>
@@ -619,7 +644,7 @@ class Wp_Deals_And_Coupons_Admin
 
     $(document).ready(function() {
 
- 
+
         	 jQuery('#content-html').click();
     jQuery('#wp-content-editor-tools').remove();
     jQuery('#ed_toolbar').remove();
@@ -639,7 +664,6 @@ jQuery( "<div style='padding-top:10px; padding-bottom:5px'><label style='font-si
 
 	public function admin_head_css()
 	{
-		 
 		?>
 
  			<style type="text/css">
@@ -671,7 +695,7 @@ jQuery( "<div style='padding-top:10px; padding-bottom:5px'><label style='font-si
 	{
 		global $post;
 
-		if ($post->post_type == wp_deals_and_coupons()->post_type && @current_user_can('edit_post'))
+		if ($post && $post->post_type == wp_deals_and_coupons()->post_type && @current_user_can('edit_post'))
 		{
 			remove_action('media_buttons', 'media_buttons');
 		}
