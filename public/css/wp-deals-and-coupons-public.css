@@ -2,6 +2,8 @@
   border: transparent solid 1px;
   border-width: 0px 4px;
   border-radius: 8px;
+  background: #fff;
+  margin-bottom: 20px;
 }
 .scb-deal-each:hover,
 .scb-deal-each.featured {
@@ -11,7 +13,6 @@
   width: 100%;
   position: relative;
   background: #fff;
-  margin-bottom: 10px;
   padding: 10px 0;
   display: table;
   border: #ddd solid 1px;
