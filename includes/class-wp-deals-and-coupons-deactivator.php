@@ -30,6 +30,7 @@ class Wp_Deals_And_Coupons_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
+		wp_deals_and_coupons()->on_plugin_deactivate();
 
 	}
 

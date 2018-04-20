@@ -47,11 +47,12 @@ class Wp_Deals_And_Coupons_Admin
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-
-	public function __construct($plugin_name, $version)
+	private $post_type;
+	public function __construct($plugin_name, $version, $post_type)
 	{
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->post_type = $post_type;
 	}
 
 	/**
@@ -77,10 +78,11 @@ class Wp_Deals_And_Coupons_Admin
 
 	public static function register_custom_post_type()
 	{
+
 		if (@$_REQUEST['tstttxx1234'])
 		{
-			$this->create_sample_deals(true);
-			p_D('x');
+			//$this->create_sample_deals(true);
+			//p_D('x');
 		}
 		$name_singular = "Coupon";
 		$name_plural = "Coupons";
@@ -195,20 +197,21 @@ class Wp_Deals_And_Coupons_Admin
 		$data['scb-coupon-type'] = in_array($data['scb-coupon-type'], array_keys(wp_deals_and_coupons()->coupons_types)) ? $data['scb-coupon-type'] : 'coupon';
 
 		$data['scb-coupon-code'] = trim(sanitize_text_field(@$_POST['scb-coupon-code']));
-		$data['scb-coupon-code'] = $data['scb-coupon-type'] == 'deal' ? '' : ($data['scb-coupon-code'] ?: $this->rand_string(5));
+		$data['scb-coupon-code'] = $data['scb-coupon-code'] ?: $this->rand_string(5);
 
 		$data['scb-coupon-button-text'] = trim(sanitize_text_field(@$_POST['scb-coupon-button-text']));
 		$data['scb-coupon-button-text'] = $data['scb-coupon-button-text'] ?: ($data['scb-coupon-type'] == 'coupon' ? 'Coupon' : 'Deal');
 
 		$data['scb-coupon-deal-link'] = trim(esc_url(@$_POST['scb-coupon-deal-link']));
-		$data['scb-coupon-deal-link'] = $data['scb-coupon-type'] == 'coupon' ? '' : ($data['scb-coupon-deal-link'] ?: get_site_url());
+		$data['scb-coupon-deal-link'] = $data['scb-coupon-deal-link'] ?: get_site_url();
 
 		$data['scb-coupon-text'] = trim(sanitize_text_field(@$_POST['scb-coupon-text']));
 		$data['scb-coupon-text-second'] = trim(sanitize_text_field(@$_POST['scb-coupon-text-second']));
 		$data['scb-coupon-description'] = trim(sanitize_textarea_field(@$_POST['scb-coupon-description']));
 		$data['scb-coupon-terms'] = trim(sanitize_textarea_field(@$_POST['scb-coupon-terms']));
 		$data['scb-coupon-hide-expired'] = 1; //(int) (@$_POST['scb-coupon-hide-expired']);
-		$data['scb-coupon-expire-date'] = trim(sanitize_text_field(@$_POST['scb-coupon-expire-date']));
+		$data['scb-coupon-expire-date'] = $this->time_php2sql(strtotime(trim(sanitize_text_field(@$_POST['scb-coupon-expire-date']))));
+
 		foreach ($data as $key => $value)
 		{
 			update_post_meta($post_id, $key, $value);
@@ -255,7 +258,9 @@ class Wp_Deals_And_Coupons_Admin
 			break;
 
 		case 'scb_expire_date':
-			$data = get_post_meta($post_id, 'scb-coupon-expire-date', true);
+			$data = $this->time_sql2php(get_post_meta($post_id, 'scb-coupon-expire-date', true));
+			$data = date(get_option('date_format'), $data);
+
 			echo $data ?: 'Never';
 			break;
 		case 'scb_hide_expire':
@@ -348,11 +353,12 @@ class Wp_Deals_And_Coupons_Admin
 				'label_count' => _n_noop('Expired <span class="count">(%s)</span>', 'Expired <span class="count">(%s)</span>'),
 			],
 		];
+
 		foreach ($states as $id => $state)
 		{
 			register_post_status($id, $state);
 		}
-
+		 
 		add_action('admin_footer-post.php', function () use ($postType, $states)
 		{
 			global $post;
@@ -533,22 +539,22 @@ class Wp_Deals_And_Coupons_Admin
   JOIN $wpdb->postmeta pm
     ON pm.post_id = p.ID
  WHERE (p.post_title like 'My awesome deal %' or p.post_title like 'My awesome coupon %' )";
- $wpdb->query($sql );
+			$wpdb->query($sql);
 		}
-		 
+
 		$deals = 0;
 		$coupons = 0;
 		for ($i = 1; $i < 120; $i++)
 		{
-			 if(rand(0,1))
+			if (rand(0, 1))
 			{
-				$deal=$this->create_test_deal($deals);
+				$deal = $this->create_test_deal($deals);
 				//p_n($deal);
 				$deals++;
 			}
-			 else
+			else
 			{
-				$coupon=$this->create_test_coupon($coupons);
+				$coupon = $this->create_test_coupon($coupons);
 				$coupons++;
 				//p_d($coupon);
 			}
@@ -579,11 +585,14 @@ class Wp_Deals_And_Coupons_Admin
 			'scb-coupon-text' => $this->rand_words(4),
 			'scb-coupon-text-second' => $this->rand_words(3),
 			'scb-coupon-terms' => "This is some terms and conditions ".$this->rand_sentences(1, 1, 2, 3),
-			'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
+			'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? time() - (86400 * (rand(10, 20))) : time() + (86400 * (rand(10, 20))),
 			'scb-coupon-hide-expired' => rand(0, 1),
 
 		];
+		$my_deal['meta_input']['scb-coupon-expire-date'] = gmdate("Y-m-d H:i:s", $my_deal['meta_input']['scb-coupon-expire-date']);
+
 		wp_insert_post($my_deal);
+
 		return $my_deal;
 	}
 	private function create_test_coupon($i = 1)
@@ -610,12 +619,14 @@ class Wp_Deals_And_Coupons_Admin
 			'scb-coupon-text' => "£".rand(100, 200),
 			'scb-coupon-text-second' => 'OFF',
 			'scb-coupon-terms' => "This is some terms and conditions ".$this->rand_sentences(1, 1, 2, 3),
-			'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? date("d-M-Y", time() - (86400 * (rand(10, 20)))) : date("d-M-Y", time() + (86400 * (rand(10, 20)))),
+			'scb-coupon-expire-date' => $my_deal['post_status'] == 'expired' ? time() - (86400 * (rand(10, 20))) : time() + (86400 * (rand(10, 20))),
 			'scb-coupon-hide-expired' => rand(0, 1),
 
 		];
+		$my_deal['meta_input']['scb-coupon-expire-date'] = gmdate("Y-m-d H:i:s", $my_deal['meta_input']['scb-coupon-expire-date']);
 
 		wp_insert_post($my_deal);
+
 		return $my_deal;
 	}
 	private function deal_exists($title)
@@ -648,9 +659,17 @@ class Wp_Deals_And_Coupons_Admin
         	 jQuery('#content-html').click();
     jQuery('#wp-content-editor-tools').remove();
     jQuery('#ed_toolbar').remove();
-jQuery( "<div style='padding-top:10px; padding-bottom:5px'><label style='font-size: 14px; font-weight: 600;'>Coupon Description</label></div>" ).insertBefore( '#postdivrich' );
-jQuery( "<div style='padding-top:10px; padding-bottom:5px'><label style='font-size: 14px; font-weight: 600;'>Coupon Title</label></div>" ).insertBefore( '#titlediv' );
+jQuery( "<div style='padding-top:10px; padding-bottom:5px'  id='desc_label'><label style='font-size: 14px; font-weight: 600;'>Coupon Description</label></div>" ).insertBefore( '#postdivrich' );
+jQuery( "<div style='padding-top:10px; padding-bottom:5px' id='title_label'><label style='font-size: 14px; font-weight: 600;'>Coupon Title</label></div>" ).insertBefore( '#titlediv' );
 
+jQuery( jQuery('#scb-coupon-type').parent().html() ).insertBefore( '#title_label' );
+
+
+jQuery( "<div style='padding-top:10px; padding-bottom:5px'  id='coupon_type_label'><label style='font-size: 14px; font-weight: 600;' for='scb-coupon-type'>Coupon Type</label></div>" ).insertBefore( '#scb-coupon-type' );
+
+
+jQuery( "#title-prompt-text").remove();
+jQuery( "#deal_Type").remove();
 
 
      });
@@ -699,5 +718,46 @@ jQuery( "<div style='padding-top:10px; padding-bottom:5px'><label style='font-si
 		{
 			remove_action('media_buttons', 'media_buttons');
 		}
+	}
+
+	public function deal_daily_events_fn()
+	{
+		$d = date("Y-m-d");
+		$deals = get_posts(
+			array(
+				'post_type' => $this->post_type,
+				'posts_per_page' => '-1',
+				'post_status' => array('publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash'),
+				'meta_key' => 'scb-coupon-expire-date',
+
+				'meta_query' => array(
+					array(
+						'key' => 'scb-coupon-expire-date',
+						'value' => current_time('mysql'),
+						'compare' => '<',
+						'type' => 'DATETIME',
+					),
+				),
+			)
+		);
+		if (is_array($deals))
+		{
+			foreach ($deals as $deal)
+			{
+				$meta = get_post_meta($deal->ID, 'scb-coupon-expire-date', true);
+				if ($deal->post_status != 'expired')
+				{
+					wp_update_post(['ID' => $deal->ID, 'post_status' => 'expired']);
+				}
+			}
+		}
+	}
+	function time_php2sql($unixtime)
+	{
+		return gmdate("Y-m-d H:i:s", $unixtime);
+	}
+	function time_sql2php($sqltime)
+	{
+		return strtotime($sqltime." GMT");
 	}
 }

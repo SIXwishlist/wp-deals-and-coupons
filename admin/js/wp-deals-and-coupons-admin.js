@@ -4,16 +4,21 @@
     $(document).ready(function() {
         $('#scb-coupon-expire-date').datepicker();
 
-        $('#scb-coupon-type').on('change', function() {
+        $(document).on('change','#scb-coupon-type' ,function() {
 
             if ($(this).val() == 'coupon') {
                 $('#scb-coupon-deal-link-row').hide();
                 $('#scb-coupon-code-row').show();
 
-            } else {
+            } else if($(this).val() == 'deal') {
                 $('#scb-coupon-deal-link-row').show();
                 $('#scb-coupon-code-row').hide();
 
+            }
+            else
+            {
+                $('#scb-coupon-deal-link-row').show();
+                $('#scb-coupon-code-row').show();
             }
         });
 
