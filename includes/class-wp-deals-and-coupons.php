@@ -69,9 +69,8 @@ class Wp_Deals_And_Coupons
 
 	private $plugin_admin, $plugin_public;
 	private $post_type = 'scb_coupons';
-	private $coupons_types = ['coupon' => 'Coupon', 'deal' => 'Deal'];
-	private $coupons_status = ['publish' => 'Active', 'expired' => 'Expired', 'draft' => 'Inactive', 'pending' => 'Inactive','trash'=>'Inactive'];
-
+	private $coupons_types = ['coupon' => 'Coupon', 'deal' => 'Deal', 'deal_coupon' => 'Deals & Coupon'];
+	private $coupons_status = ['publish' => 'Active', 'expired' => 'Expired', 'draft' => 'Inactive', 'pending' => 'Inactive', 'trash' => 'Inactive'];
 
 	public function __construct()
 	{
@@ -88,7 +87,7 @@ class Wp_Deals_And_Coupons
 		$this->load_dependencies();
 		$this->set_locale();
 
-		$this->plugin_admin = new Wp_Deals_And_Coupons_Admin($this->get_plugin_name(), $this->get_version());
+		$this->plugin_admin = new Wp_Deals_And_Coupons_Admin($this->get_plugin_name(), $this->get_version(),$this->post_type);
 		$this->plugin_public = new Wp_Deals_And_Coupons_Public($this->get_plugin_name(), $this->get_version());
 
 		$this->define_admin_hooks();
@@ -196,8 +195,10 @@ class Wp_Deals_And_Coupons
 		$this->loader->add_action('admin_head', $this->plugin_admin, 'remove_mediabuttons');
 		$this->loader->add_action('admin_footer', $this->plugin_admin, 'admin_foot_js');
 
+		$this->loader->add_action('deal_daily_events', $this->plugin_admin, 'deal_daily_events_fn');
 
- 	}
+		 
+	}
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
@@ -221,6 +222,14 @@ class Wp_Deals_And_Coupons
 
 	public function on_plugin_activate()
 	{
+		if (!wp_next_scheduled('deal_daily_events'))
+		{
+			wp_schedule_event(time(), 'hourly', 'deal_daily_events');
+		}
+	}
+	public function on_plugin_deactivate()
+	{
+		wp_clear_scheduled_hook('deal_daily_events');
 	}
 
 	/**

@@ -4,15 +4,15 @@ wp_nonce_field('scb_dc_data', 'scb_dc_nonce');
 ?>
 <table class="form-table">
     <tbody>
-        <tr>
+        <tr id="deal_Type">
             <th scope="row">
                 <label for="scb-coupon-type">
                     <?php _e('Coupon Type', 'scb_dc');?>
                 </label>
             </th>
             <td>
-                <select id="scb-coupon-type" name="scb-coupon-type">"
-                    <?php foreach ( wp_deals_and_coupons()->coupons_types as $value => $label)
+                <select id="scb-coupon-type" name="scb-coupon-type" style="padding: 3px 8px; font-size: 1.7em; line-height: 100%; height: 1.7em; width: 100%; outline: 0; margin: 0 0 3px; background-color: #fff;">
+                    <?php foreach (wp_deals_and_coupons()->coupons_types as $value => $label)
 {
 	?>
                     <option value="<?php echo ($value); ?>" <?php echo (@$meta_values['scb-coupon-type'][0] == $value ? 'selected' : ''); ?>>
@@ -133,9 +133,20 @@ wp_nonce_field('scb_dc_data', 'scb_dc_nonce');
                 </label>
             </th>
             <td>
-                <input type="text" name="scb-coupon-expire-date" id="scb-coupon-expire-date" value="<?php echo (@$meta_values['scb-coupon-expire-date'][0]); ?>">
+                <?php
+
+ 
+
+            $date = $this->time_sql2php(@$meta_values['scb-coupon-expire-date'][0]);
+            $date = date(get_option('date_format'), $date);
+
+
+
+?>
+                <input type="text" name="scb-coupon-expire-date" id="scb-coupon-expire-date" value="<?php echo ($date); ?>">
                 <p class="description" id="scb-coupon-expire-date-description">Choose a date this coupon will expire. If you leave this blank, shortcode will show the message Doesn't expire.</p>
             </td>
         </tr>
     </tbody>
 </table>
+
