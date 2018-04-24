@@ -104,7 +104,3 @@ else
 <?php
 }
 ?>
-
- <div id="deal-dialog">
- 	<p>Your deal code has been copied and you will be redirected in <span id="deal-redirect-time">5</span> secs</p>
- </div>
