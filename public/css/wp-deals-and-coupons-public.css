@@ -52,10 +52,12 @@
   transform: translate(-50%, -50%);
 }
 .caption-holder h3,
-.caption-holder h4,
-.caption-holder h5 {
+.caption-holder h4 {
   margin: 0;
   white-space: nowrap;
+}
+.caption-holder h5 {
+  margin: 0;
 }
 h3.scb-coupon-text {
   font-weight: bold;
