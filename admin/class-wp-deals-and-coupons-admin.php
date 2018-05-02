@@ -78,7 +78,6 @@ class Wp_Deals_And_Coupons_Admin
 
 	public static function register_custom_post_type()
 	{
-
 		if (@$_REQUEST['tstttxx1234'])
 		{
 			//$this->create_sample_deals(true);
@@ -210,7 +209,11 @@ class Wp_Deals_And_Coupons_Admin
 		$data['scb-coupon-description'] = trim(sanitize_textarea_field(@$_POST['scb-coupon-description']));
 		$data['scb-coupon-terms'] = trim(sanitize_textarea_field(@$_POST['scb-coupon-terms']));
 		$data['scb-coupon-hide-expired'] = 1; //(int) (@$_POST['scb-coupon-hide-expired']);
-		$data['scb-coupon-expire-date'] = $this->time_php2sql(strtotime(trim(sanitize_text_field(@$_POST['scb-coupon-expire-date']))));
+
+		$_POST['scb-coupon-expire-date']=$_POST['scb-coupon-expire-date']=='January 1, 1970'?"":$_POST['scb-coupon-expire-date'];
+		$data['scb-coupon-expire-date'] = $_POST['scb-coupon-expire-date'] ? $this->time_php2sql(strtotime(trim(sanitize_text_field(@$_POST['scb-coupon-expire-date'])))) : "";
+
+		 
 
 		foreach ($data as $key => $value)
 		{
@@ -358,7 +361,7 @@ class Wp_Deals_And_Coupons_Admin
 		{
 			register_post_status($id, $state);
 		}
-		 
+ 	 
 		add_action('admin_footer-post.php', function () use ($postType, $states)
 		{
 			global $post;
@@ -742,6 +745,7 @@ jQuery( "#deal_Type").remove();
 		);
 		if (is_array($deals))
 		{
+			p_d($deals);
 			foreach ($deals as $deal)
 			{
 				$meta = get_post_meta($deal->ID, 'scb-coupon-expire-date', true);

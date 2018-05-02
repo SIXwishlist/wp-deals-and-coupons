@@ -13,7 +13,7 @@
  * Plugin Name:       Wp Deals and coupons
  * Plugin URI:        https://io.agency
  * Description:       Create and manage Deals and coupon codes
- * Version:           1.0.3
+ * Version:           1.0.4
  * Author:            Rajneesh
  * Author URI:        https://io.agency
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if (!defined('WPINC'))
  * Rename this for your plugin and update it as you release new versions.
  */
 
-define('PLUGIN_NAME_VERSION', '1.0.3');
+define('PLUGIN_NAME_VERSION', '1.0.4');
 
 /**
  * The code that runs during plugin activation.
