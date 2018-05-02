@@ -135,10 +135,12 @@ wp_nonce_field('scb_dc_data', 'scb_dc_nonce');
             <td>
                 <?php
 
- 
-
+            $date ="";
+            if(@$meta_values['scb-coupon-expire-date'][0])
+            {    
             $date = $this->time_sql2php(@$meta_values['scb-coupon-expire-date'][0]);
             $date = date(get_option('date_format'), $date);
+            }
 
 
 
