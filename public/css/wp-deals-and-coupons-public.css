@@ -52,10 +52,12 @@
   transform: translate(-50%, -50%);
 }
 .caption-holder h3,
-.caption-holder h4,
-.caption-holder h5 {
+.caption-holder h4 {
   margin: 0;
   white-space: nowrap;
+}
+.caption-holder h5 {
+  margin: 0;
 }
 h3.scb-coupon-text {
   font-weight: bold;
@@ -94,7 +96,6 @@ h5.scb-coupon-type {
 }
 .scb-coupon-title {
   color: #092a5e;
-  text-transform: capitalize;
 }
 .scb-coupon-terms {
   font-size: 0.9em;
@@ -131,16 +132,16 @@ h5.scb-coupon-type {
 }
 @media (max-width: 480px) {
   h3.scb-coupon-text {
-    font-size: 1em;
-    line-height: 1.1em;
+    font-size: 0.9em;
+    line-height: 1.2em;
   }
   h4.scb-coupon-text-second {
-    font-size: 0.9em;
-    line-height: 1.1em;
+    font-size: 0.7em;
+    line-height: 1.2em;
   }
   h5.scb-coupon-type {
-    font-size: 0.7em;
-    line-height: 1.1em;
+    font-size: 0.6em;
+    line-height: 1.2em;
   }
   .scb-deal-row {
     padding: 5px;

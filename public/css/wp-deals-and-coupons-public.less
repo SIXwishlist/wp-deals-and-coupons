@@ -27,7 +27,8 @@
 
 .caption-holder { 
 	&{ text-align:center; text-transform:uppercase; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
-	h3, h4, h5{ margin:0; white-space:nowrap; }
+	h3, h4{ margin:0; white-space:nowrap; }
+	h5{ margin:0; }
 }
 h3.scb-coupon-text { font-weight:bold; font-size:2.1em; line-height:1.1em; }
 h4.scb-coupon-text-second { font-weight:normal; font-size:1.5em; line-height:1.1em; }
@@ -38,7 +39,7 @@ h5.scb-coupon-type { font-weight:normal; margin-top:25px; }
 .scb-coupon-code { background:#eee; color:@brand-primary !important; }
 .scb-coupon-deal-link:hover{ background:darken(@brand-primary, 10%); }
 
-.scb-coupon-title { color:#092a5e; text-transform:capitalize; }
+.scb-coupon-title { color:#092a5e; }
 .scb-coupon-terms { font-size:0.9em; }
 .scb-coupon-description{
 	.dashicons{ display:none; }
@@ -55,9 +56,9 @@ h5.scb-coupon-type { font-weight:normal; margin-top:25px; }
 .dashicons-arrow-up-alt2{ cursor:pointer; }
 
 @media (max-width:480px){
-	h3.scb-coupon-text { font-size:1em; line-height:1.1em; }
-	h4.scb-coupon-text-second { font-size:0.9em; line-height:1.1em; }
-	h5.scb-coupon-type { font-size:0.7em; line-height:1.1em; }
+	h3.scb-coupon-text { font-size:0.9em; line-height:1.2em; }
+	h4.scb-coupon-text-second { font-size:0.7em; line-height:1.2em; }
+	h5.scb-coupon-type { font-size:0.6em; line-height:1.2em; }
 
 	.scb-deal-row{ padding:5px; display:block; }
 	.scb-col{
